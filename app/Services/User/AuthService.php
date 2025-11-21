@@ -59,4 +59,13 @@ class AuthService
             ];
         });
     }
+
+    public function changeUserRoles(User $user, array $roles): User
+    {
+        // این متد جادویی Spatie است:
+        // نقش‌های قبلی را می‌گیرد و نقش‌های جدید را جایگزین می‌کند
+        $user->syncRoles($roles);
+
+        return $user;
+    }
 }

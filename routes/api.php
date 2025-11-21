@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController; // مطمئن شوید مسیر کنترلر درست است
 use App\Http\Controllers\AuthController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,8 +41,12 @@ Route::prefix('v1')->group(function () {
     // ========================================================================
     Route::middleware('auth:sanctum')->group(function () {
 
+        Route::middleware('role:Manager')->group(function () {
+            Route::put('/users/{user}/roles', [AuthController::class, 'updateRoles']);
+        });
+
         Route::get('/user', function (Request $request) {
-            return $request->user();
+            return new UserResource($request->user());
         });
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
@@ -64,11 +69,7 @@ Route::prefix('v1')->group(function () {
         // نکته مهم: اینجا به همه این نقش‌ها اجازه ورود میدهیم.
         // محدودیت اینکه "استاد فقط دوره خودش را ببیند" در CoursePolicy کنترل می‌شود.
         Route::middleware(['role:Admin|Manager|Instructor'])->group(function () {
-
-            Route::post('/courses', [CourseController::class, 'store']);
             Route::put('/courses/{course}', [CourseController::class, 'update']);
-            Route::delete('/courses/{course}', [CourseController::class, 'destroy']);
-
             // آپلود ویدیو (آینده)
             // Route::post('/courses/{course}/upload', [CourseController::class, 'uploadVideo']);
         });
