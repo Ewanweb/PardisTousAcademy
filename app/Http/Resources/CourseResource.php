@@ -19,15 +19,24 @@ class CourseResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'description' => $this->description, // می‌توان خلاصه کرد Str::limit
+            'price' => $this->price,
             'price_formatted' => number_format($this->price) . ' تومان',
             'status' => $this->status,
-            'category' => new CategoryResource($this->whenLoaded('category')), // لود کردن مشروط
-            'instructor' => [
-                'name' => $this->instructor->name,
-                'avatar' => '...', // لینک آواتار
-            ],
+            'image' => $this->image,
+
+            // روابط (فقط وقتی لود شده باشند نمایش داده می‌شوند)
+            'instructor' => new UserResource($this->whenLoaded('instructor')),
+            'category' => new CategoryResource($this->whenLoaded('category')),
+
             'created_at' => $this->created_at->toIso8601String(),
-            'seo' => new SeoResource($this->seo ?? new SeoMetaData(['seoable' => $this])),
+
+            // سئو
+            'seo' => new SeoResource(
+            // اگر رابطه لود شده بود و وجود داشت -> خودش را بده
+            // اگر نبود -> یک آبجکت خالی سئو بساز که به خودِ این دوره وصل است
+                $this->seo ?? new SeoMetadata(['seoable' => $this->resource])
+            ),
         ];
     }
 }

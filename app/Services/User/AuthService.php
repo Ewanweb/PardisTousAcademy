@@ -7,6 +7,32 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 class AuthService
 {
+
+    public function registerUser(array $data): array
+    {
+        return DB::transaction(function () use ($data) {
+
+            // 1. ساخت کاربر
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'mobile' => $data['mobile'] ?? null,
+                'password' => Hash::make($data['password']),
+                'is_active' => true, // پیش‌فرض فعال است
+            ]);
+
+            // 2. اختصاص نقش پیش‌فرض (حتما باید سیدر RoleSeeder اجرا شده باشد)
+            $user->assignRole('User');
+
+            // 3. تولید توکن برای لاگین خودکار
+            $token = $user->createToken('register_token')->plainTextToken;
+
+            return [
+                'user' => $user,
+                'token' => $token,
+            ];
+        });
+    }
     public function registerStudent(array $data): array
     {
         return DB::transaction(function () use ($data) {

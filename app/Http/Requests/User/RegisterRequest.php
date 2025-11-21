@@ -20,8 +20,20 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'mobile' => ['nullable', 'string', 'unique:users', 'regex:/^09[0-9]{9}$/'], // اعتبارسنجی موبایل ایران
-            'password' => ['required', 'confirmed', Password::defaults()], // پسورد قوی
+
+            'mobile' => ['nullable', 'string', 'unique:users', 'regex:/^09[0-9]{9}$/'],
+
+            // پسورد قوی (حداقل ۸ کاراکتر + تاییدیه)
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'این ایمیل قبلاً ثبت نام کرده است.',
+            'mobile.regex' => 'فرمت شماره موبایل صحیح نیست (مثال: 09123456789).',
+            'password.confirmed' => 'تکرار رمز عبور مطابقت ندارد.',
         ];
     }
 }

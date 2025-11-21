@@ -18,6 +18,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'title' => $this->name, // در فرانت معمولا title استفاده می‌شود
             'slug' => $this->slug,
+            'image' => $this->image,
             'is_active' => (bool) $this->is_active,
 
             // نمایش والد (اگر وجود داشته باشد)

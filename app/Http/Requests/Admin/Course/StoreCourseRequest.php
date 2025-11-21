@@ -6,26 +6,47 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCourseRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return $this->user()->can('create_courses');
+        // ادمین، مدیر یا مدرس اجازه دارند
+        return $this->user()->hasAnyRole(['Admin', 'Manager']);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                // ✅ قانون حیاتی: نام دوره باید در کل جدول courses یکتا باشد
+                'unique:courses,title',
+            ],
+
             'category_id' => ['required', 'exists:categories,id'],
-            'description' => ['required', 'string'],
             'price' => ['required', 'integer', 'min:0'],
+            'description' => ['required', 'string'],
+
+            // هندل کردن عکس (چه با نام image بیاید چه thumbnail)
+            'image' => ['nullable', 'string'],
+
+            'status' => ['nullable', 'in:draft,published,archived'],
+
+            // ✅ اعتبارسنجی سئو (برای ساخت)
+            'seo' => ['nullable', 'array'],
+            'seo.meta_title' => ['nullable', 'string', 'max:255'],
+            'seo.meta_description' => ['nullable', 'string'],
+            'seo.noindex' => ['boolean'],
+            'seo.canonical_url' => ['nullable', 'url'],
+        ];
+    }
+
+    // ✅ پیام خطای فارسی اختصاصی
+    public function messages(): array
+    {
+        return [
+            'title.unique' => 'این نام دوره قبلاً در سیستم ثبت شده است. لطفاً نام دیگری انتخاب کنید.',
+            'category_id.exists' => 'دسته‌بندی انتخاب شده معتبر نیست.',
         ];
     }
 }

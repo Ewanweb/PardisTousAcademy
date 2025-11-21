@@ -32,4 +32,16 @@ class Category extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+    public function getAllChildrenIds()
+    {
+        // خودم + تمام بچه‌هایم + بچه‌های بچه‌هایم (بازگشتی)
+        $ids = collect([$this->id]);
+
+        foreach ($this->children as $child) {
+            $ids = $ids->merge($child->getAllChildrenIds());
+        }
+
+        return $ids;
+    }
 }

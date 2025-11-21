@@ -45,6 +45,6 @@ class RoleSeeder extends Seeder
 
         $manager->givePermissionTo($permissions);
         $admin->givePermissionTo('create_course', 'edit_course', 'delete_course', 'publish_course');
-        $instructor->givePermissionTo('create_course', 'edit_course', 'delete_course', 'publish_course');
+        $instructor->givePermissionTo('edit_course','publish_course');
     }
 }

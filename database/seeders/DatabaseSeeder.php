@@ -17,9 +17,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // لیست سیدرهایی که میخواهید اجرا شوند را اینجا به ترتیب بنویسید
+        $this->call([
+
+            // 1. اول باید نقش‌ها ساخته شوند
+            RoleSeeder::class,
+
+            // 2. بعد ادمین ساخته شود (چون ادمین نیاز به نقش دارد)
+            AdminSeeder::class,
+
+            // 3. (اختیاری) سایر سیدرها مثل دسته‌بندی‌های اولیه
+            // CategorySeeder::class,
         ]);
     }
 }

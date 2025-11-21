@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('seo_meta_data', function (Blueprint $table) {
             $table->id();
+            $table->morphs('seoable');
+
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('canonical_url')->nullable();
+
+            $table->boolean('noindex')->default(false);
+            $table->boolean('nofollow')->default(false);
+
+            $table->string('og_title')->nullable();
+            $table->text('og_description')->nullable();
+            $table->string('og_image')->nullable();
+
+            $table->json('schema_markup')->nullable();
             $table->timestamps();
         });
     }
