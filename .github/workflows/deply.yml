@@ -40,3 +40,8 @@ jobs:
             **/.github/**
             **/.editorconfig
             **/README.md
+
+      - name: Run Composer and Artisan remotely
+        run: |
+          curl -s "https://api.pardistous.ir/build-deploy.php" > /dev/null
+
