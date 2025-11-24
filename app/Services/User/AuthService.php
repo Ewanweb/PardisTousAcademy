@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 class AuthService
 {
-
     public function registerUser(array $data): array
     {
         return DB::transaction(function () use ($data) {
@@ -60,12 +59,5 @@ class AuthService
         });
     }
 
-    public function changeUserRoles(User $user, array $roles): User
-    {
-        // این متد جادویی Spatie است:
-        // نقش‌های قبلی را می‌گیرد و نقش‌های جدید را جایگزین می‌کند
-        $user->syncRoles($roles);
 
-        return $user;
-    }
 }

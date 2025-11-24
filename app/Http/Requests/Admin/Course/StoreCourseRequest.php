@@ -28,9 +28,9 @@ class StoreCourseRequest extends FormRequest
             'description' => ['required', 'string'],
 
             // هندل کردن عکس (چه با نام image بیاید چه thumbnail)
-            'image' => ['nullable', 'string'],
-
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'status' => ['nullable', 'in:draft,published,archived'],
+            'instructor_id' => ['nullable', 'exists:users,id'],
 
             // ✅ اعتبارسنجی سئو (برای ساخت)
             'seo' => ['nullable', 'array'],

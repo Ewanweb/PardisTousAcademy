@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\User\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -20,6 +21,9 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+    /**
+     * ثبت نام در سیستم
+     */
     public function register(RegisterRequest $request): JsonResponse
     {
         // انجام عملیات ثبت نام در سرویس
@@ -34,6 +38,7 @@ class AuthController extends Controller
             ],
         ], 201);
     }
+
     /**
      * ورود به سیستم
      */
@@ -90,4 +95,6 @@ class AuthController extends Controller
             'data' => new UserResource($updatedUser), // لیست نقش‌های جدید در ریسورس برمی‌گردد
         ]);
     }
+
+
 }

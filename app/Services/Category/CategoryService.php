@@ -5,6 +5,7 @@
 namespace App\Services\Category;
 
 use App\Models\Admin\Category;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +15,9 @@ class CategoryService
     /**
      * ایجاد دسته‌بندی جدید همراه با سئو
      */
-    public function createCategory(array $data): Category
+    public function createCategory(array $data, User $creator): Category
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $creator) {
             // 1. ساخت اسلاگ یونیک از روی نام
             // نکته: در سیستم‌های خیلی بزرگ شاید نیاز به هندل کردن اسلاگ تکراری باشد
             $slug = Str::slug($data['name']);
@@ -32,6 +33,7 @@ class CategoryService
                 'slug' => $slug,
                 'parent_id' => $data['parent_id'] ?? null,
                 'is_active' => $data['is_active'] ?? true,
+                'created_by' => $creator->id,
             ]);
 
             // 3. ذخیره اطلاعات سئو (با استفاده از همان Trait که قبلا ساختیم)

@@ -48,7 +48,8 @@ class UpdateCourseRequest extends FormRequest
             'description' => ['sometimes', 'string'],
 
             // 4. اعتبارسنجی تصویر (ممکن است با نام image یا thumbnail بیاید)
-            'image' => ['nullable', 'string'],     // اگر فقط لینک عکس را می‌فرستید
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],    // اگر فقط لینک عکس را می‌فرستید
+            'instructor_id' => ['nullable', 'exists:users,id'],
 
             // 5. اعتبارسنجی وضعیت (فقط مقادیر مجاز)
             'status' => [

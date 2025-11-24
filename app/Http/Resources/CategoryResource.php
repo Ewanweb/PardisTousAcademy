@@ -30,6 +30,7 @@ class CategoryResource extends JsonResource
 
             // نمایش تعداد دوره‌های داخل این دسته
             'courses_count' => $this->whenCounted('courses'),
+            'creator' => $this->creator ? $this->creator->name : 'سیستم',
 
             // دیتای سئو (از مرحله قبل)
             'seo' => new SeoResource($this->whenLoaded('seo')),

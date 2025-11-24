@@ -22,6 +22,7 @@ return new class extends Migration
                 ->constrained('categories')
                 ->nullOnDelete();
             $table->boolean('is_active')->default(true);
+            $table->integer('courses_count')->default(0);
             $table->timestamps();
 
             // ایندکس‌گذاری برای سرعت بالای جستجو

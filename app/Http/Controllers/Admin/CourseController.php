@@ -29,7 +29,9 @@ class CourseController extends Controller
     {
         $query = Course::query()->with(['instructor', 'category', 'seo']);
         $user = auth('sanctum')->user();
-
+        if ($request->has('trashed') && $request->trashed == 'true') {
+            $query->onlyTrashed(); // فقط حذف شده‌ها
+        }
         // اگر کاربر لاگین نکرده یا ادمین/مدیر نیست، فقط منتشر شده‌ها را ببیند
         if (!$user || !$user->hasAnyRole(['Admin', 'Manager'])) {
             $query->published();
@@ -127,10 +129,27 @@ class CourseController extends Controller
     public function destroy(Course $course): JsonResponse
     {
         // استفاده از Policy برای چک کردن دسترسی
-        $this->authorize('delete', $course);
 
         $this->courseService->deleteCourse($course);
 
         return response()->json(['message' => 'دوره حذف شد.']);
+    }
+    public function restore($id): JsonResponse
+    {
+        $course = Course::withTrashed()->findOrFail($id);
+
+        $this->courseService->restoreCourse($course);
+
+        return response()->json(['message' => 'دوره بازیابی شد.']);
+    }
+
+    // ✅ حذف دائم
+    public function forceDelete($id): JsonResponse
+    {
+        $course = Course::withTrashed()->findOrFail($id);
+
+        $this->courseService->forceDeleteCourse($course);
+
+        return response()->json(['message' => 'دوره به طور کامل حذف شد.']);
     }
 }

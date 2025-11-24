@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController; // مطمئن شوید مسیر کنترلر درست است
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -59,8 +61,14 @@ Route::prefix('v1')->group(function () {
             Route::put('/categories/{category}', [CategoryController::class, 'update']);
             Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
 
+            Route::post('/courses', [CourseController::class, 'store']);
+            Route::delete('/courses/{course}', [CourseController::class, 'destroy']);
+            Route::post('/courses/{id}/restore', [CourseController::class, 'restore']);
+            Route::delete('/courses/{id}/force', [CourseController::class, 'forceDelete']);
+
+
             // مدیریت کامل کاربران (اگر کنترلر User دارید فعال کنید)
-            // Route::apiResource('users', UserController::class);
+            Route::apiResource('users', UserController::class);
         });
 
         // --------------------------------------------------------------------
@@ -70,6 +78,7 @@ Route::prefix('v1')->group(function () {
         // محدودیت اینکه "استاد فقط دوره خودش را ببیند" در CoursePolicy کنترل می‌شود.
         Route::middleware(['role:Admin|Manager|Instructor'])->group(function () {
             Route::put('/courses/{course}', [CourseController::class, 'update']);
+            Route::get('/admin/stats', [DashboardController::class, 'index']);
             // آپلود ویدیو (آینده)
             // Route::post('/courses/{course}/upload', [CourseController::class, 'uploadVideo']);
         });

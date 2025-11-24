@@ -2,6 +2,7 @@
 
 namespace App\Models\Admin;
 
+use App\Models\User;
 use App\Traits\HasSeo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ class Category extends Model
     /** @use HasFactory<\Database\Factories\Admin\CategoryFactory> */
     use HasFactory, HasSeo;
 
-    protected $fillable = ['name', 'slug', 'image','parent_id', 'is_active'];
+    protected $fillable = ['name', 'slug', 'image','parent_id', 'is_active', 'created_by'];
 
     // رابطه با فرزندان (زیرمجموعه‌ها)
     public function children(): HasMany
@@ -31,6 +32,11 @@ class Category extends Model
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function getAllChildrenIds()

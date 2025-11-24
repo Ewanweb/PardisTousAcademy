@@ -30,7 +30,6 @@ class CategoryController extends Controller
     public function index(): JsonResponse
     {
         $categories = Category::query()
-            ->whereNull('parent_id') // فقط ریشه‌ها را بگیر
             ->with(['children', 'seo']) // فرزندان و سئو را هم بیار
             ->get();
 
@@ -44,11 +43,11 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): JsonResponse
     {
-        $category = $this->categoryService->createCategory($request->validated());
+        $category = $this->categoryService->createCategory($request->validated(), $request->user());
 
         return response()->json([
             'message' => 'دسته‌بندی با موفقیت ایجاد شد.',
-            'data' => new CategoryResource($category->load('seo')),
+            'data' => new CategoryResource($category->load('seo', 'creator')),
         ], 201);
     }
 
